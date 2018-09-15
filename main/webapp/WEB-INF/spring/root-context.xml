@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.3.xsd
+		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+
+	<!-- MYSQL dataSource -->
+    <bean id="dataSource"
+    	class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy" />
+        <property name="url" value="jdbc:log4jdbc:mysql://127.0.0.1:3306/keyword" />
+        <property name="username" value="root" />
+        <property name="password" value="12341234" />
+    </bean>
+	
+	<!-- mybatis SqlSessionFactoryBean -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    	<property name="dataSource" ref="dataSource"></property>
+    	<property name="configLocation" value="classpath:/mybatis-config.xml"></property>
+    	<property name="mapperLocations" value="classpath:mappers/*Mapper.xml"></property>
+    </bean>
+    
+    <!-- mybatis -->
+    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate" destroy-method="clearCache">
+    	<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"></constructor-arg>
+    </bean>
+    
+    <!-- Velocity 에 대한 설정 -->
+	<bean id="velocityConfig" class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+		<property name="resourceLoaderPath" value="/WEB-INF/templates/" />
+	
+		<property name="velocityProperties">
+			<props>
+				<prop key="input.encoding">utf-8</prop>
+				<prop key="output.encoding">utf-8</prop>
+	    		<prop key="file.resource.loader.cache">false</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+		<property name="exposeRequestAttributes" value="true" />
+		<property name="exposeSessionAttributes" value="true" />
+		<property name="exposeSpringMacroHelpers" value="true" />
+		<property name="requestContextAttribute" value="rc" />
+		<property name="cache" value="false" />
+		<property name="suffix" value=".vm" />
+		<property name="order" value="1" />
+		<property name="contentType">
+			<value>text/html; charset=utf-8</value>
+		</property>
+	</bean>
+
+    <!-- bean 등록 -->
+    <context:component-scan base-package="com.hoyy.keyword.repositories"></context:component-scan>
+    <context:component-scan base-package="com.hoyy.keyword.services"></context:component-scan>
+    <context:component-scan base-package="com.hoyy.keyword.controllers"></context:component-scan>
+  
+</beans>
