@@ -14,8 +14,8 @@
 	<!-- MYSQL dataSource -->
     <bean id="dataSource"
     	class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy" />
-        <property name="url" value="jdbc:log4jdbc:mysql://127.0.0.1:3306/keyword" />
+        <property name="driverClassName" value="com.mysql.jdbc.Driver" />
+        <property name="url" value="jdbc:mysql://127.0.0.1:3306/keyword" />
         <property name="username" value="root" />
         <property name="password" value="12341234" />
     </bean>
@@ -31,36 +31,20 @@
     <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate" destroy-method="clearCache">
     	<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"></constructor-arg>
     </bean>
-    
-    <!-- Velocity 에 대한 설정 -->
-	<bean id="velocityConfig" class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
-		<property name="resourceLoaderPath" value="/WEB-INF/templates/" />
-	
-		<property name="velocityProperties">
-			<props>
-				<prop key="input.encoding">utf-8</prop>
-				<prop key="output.encoding">utf-8</prop>
-	    		<prop key="file.resource.loader.cache">false</prop>
-			</props>
-		</property>
-	</bean>
-	
-	<bean id="viewResolver" class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
-		<property name="exposeRequestAttributes" value="true" />
-		<property name="exposeSessionAttributes" value="true" />
-		<property name="exposeSpringMacroHelpers" value="true" />
-		<property name="requestContextAttribute" value="rc" />
-		<property name="cache" value="false" />
-		<property name="suffix" value=".vm" />
+	<!-- 
+	<bean id="jspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+		<property name="prefix" value="/WEB-INF/templates/"/>
+		<property name="suffix" value=".jsp"/>
 		<property name="order" value="1" />
 		<property name="contentType">
 			<value>text/html; charset=utf-8</value>
 		</property>
 	</bean>
-
+	-->
+	
     <!-- bean 등록 -->
     <context:component-scan base-package="com.hoyy.keyword.repositories"></context:component-scan>
     <context:component-scan base-package="com.hoyy.keyword.services"></context:component-scan>
-    <context:component-scan base-package="com.hoyy.keyword.controllers"></context:component-scan>
-  
+    
 </beans>

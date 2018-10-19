@@ -1,15 +1,15 @@
 package com.hoyy.keyword.controllers;
 
-import java.util.Locale;
-
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hoyy.keyword.services.TestService;
 
@@ -21,14 +21,27 @@ public class MainController {
 	@Inject
 	private TestService testService;
 	
-	@RequestMapping(value="/", method=RequestMethod.GET)
-	public String home(Locale locale, Model model) throws Exception {
+	@RequestMapping(value="/")
+	public String home() {
+		return "index";
+	}
+	
+	@RequestMapping(value="/test", method=RequestMethod.POST)
+	public @ResponseBody JSONObject test(HttpServletRequest request) throws Exception {
 		
-		logger.info("Welcome home! The client locale is {}.", locale);
+		String test = request.getParameter("test");
 		
-		model.addAttribute("testList", testService.selectTest());
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("rest", testService.selectTest());
 		
-		return "Test";
+		if(test.equals("test")) {
+			logger.info("success");
+			return jsonObject;
+		}
+		else {
+			logger.info("No");
+			return null;
+		}
 	}
 	
 }

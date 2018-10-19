@@ -6,7 +6,7 @@
 <mapper namespace="com.hoyy.keyword.mappers.testMapper">
  
  	<select id="selectTest" resultType="testVO">
- 		select * from test
+ 		select id from test
  	</select>
     
 </mapper>

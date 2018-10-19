@@ -1,0 +1,1 @@
+<%@include file="/resources/build/index.html"%>
